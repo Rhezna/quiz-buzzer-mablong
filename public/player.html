@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Player</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2 id="timer">Menunggu...</h2>
+
+<select id="name">
+  <option>Pia</option><option>Nairda</option><option>Nay</option>
+  <option>Idot</option><option>Nova</option><option>Pranu</option>
+  <option>Ivan</option><option>Rzna</option><option>Ais</option>
+  <option>Nabin</option>
+</select>
+
+<button id="buzz">BUZZ</button>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+let chosen = "";
+let canBuzz = false;
+
+document.getElementById("name").onchange = (e)=>{
+  chosen = e.target.value;
+  socket.emit("join", chosen);
+};
+
+document.getElementById("buzz").onclick = ()=>{
+  if (!canBuzz) return;
+  socket.emit("buzz");
+};
+
+// TIMER
+socket.on("timer", (t)=>{
+  document.getElementById("timer").innerText = "Sisa: " + t + "s";
+  canBuzz = true;
+});
+
+socket.on("timer-end", ()=>{
+  document.getElementById("timer").innerText = "Waktu habis";
+  canBuzz = false;
+});
+
+// BUZZ RESULT
+socket.on("buzz-result", (winner)=>{
+  const btn = document.getElementById("buzz");
+
+  if (winner === chosen) {
+    btn.style.background = "green";
+  } else {
+    btn.style.background = "red";
+  }
+});
+
+// RESET
+socket.on("reset", ()=>{
+  document.getElementById("buzz").style.background = "gray";
+});
+</script>
+
+</body>
+</html>
