@@ -1,0 +1,29 @@
+body {
+  font-family: Arial;
+  text-align: center;
+}
+
+button {
+  padding: 15px;
+  margin: 5px;
+  font-size: 18px;
+  background: gray;
+  color: white;
+  border: none;
+}
+
+.player {
+  padding: 10px;
+  margin: 5px;
+  background: lightgray;
+}
+
+#timer {
+  font-size: 50px;
+  font-weight: bold;
+  margin: 20px;
+}
+
+#screen p {
+  font-size: 24px;
+}
