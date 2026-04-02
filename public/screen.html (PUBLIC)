@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Screen</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1 id="timer">Menunggu...</h1>
+<h2>Leaderboard</h2>
+<div id="screen"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+const screen = document.getElementById("screen");
+const timerEl = document.getElementById("timer");
+
+socket.emit("get-data");
+
+// SCOREBOARD
+socket.on("score-update", (data)=>{
+  screen.innerHTML = "";
+
+  Object.keys(data.players)
+    .sort((a,b)=>data.players[b].score - data.players[a].score)
+    .forEach(name=>{
+      screen.innerHTML += `<p>${name} : ${data.players[name].score}</p>`;
+    });
+});
+
+// TIMER
+socket.on("timer", (t)=>{
+  timerEl.innerText = "⏱ " + t + " detik";
+  timerEl.style.color = (t <= 5) ? "red" : "black";
+});
+
+socket.on("timer-end", ()=>{
+  timerEl.innerText = "⛔ Waktu Habis";
+  timerEl.style.color = "red";
+});
+</script>
+
+</body>
+</html>
